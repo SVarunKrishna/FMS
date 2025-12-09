@@ -3,10 +3,9 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Beasova Group - Full Finance Tracker</title>
+    <title>Beasova Group - Finance Tracker</title>
     
     <style>
-        /* BASE STYLES */
         body {
             font-family: Arial, sans-serif;
             background-color: #f4f4f9;
@@ -16,7 +15,7 @@
         }
 
         .container {
-            max-width: 1200px; 
+            max-width: 1000px; /* Wider container for more fields */
             margin: 50px auto;
             padding: 20px;
             background-color: #fff;
@@ -24,7 +23,7 @@
             border-radius: 8px;
         }
 
-        /* Header Styling */
+        /* Header Styling for Beasova Group */
         .org-header {
             text-align: center;
             margin-bottom: 25px;
@@ -59,7 +58,7 @@
         /* Input Form Layout */
         .input-section {
             display: grid;
-            grid-template-columns: repeat(3, 1fr); 
+            grid-template-columns: repeat(3, 1fr); /* Three columns for inputs */
             gap: 20px;
             margin-bottom: 20px;
             padding: 15px;
@@ -85,8 +84,8 @@
             flex-grow: 1;
         }
 
-        .input-section button.add-btn {
-            grid-column: 1 / -1; 
+        .input-section button {
+            grid-column: 1 / -1; /* Button spans all columns */
             background-color: #28a745;
             color: white;
             border: none;
@@ -97,55 +96,34 @@
             transition: background-color 0.3s;
         }
 
-        .input-section button.add-btn:hover {
+        .input-section button:hover {
             background-color: #1e7e34;
         }
 
+        .summary-section {
+            margin-bottom: 20px;
+            padding: 15px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+        }
+
         /* Table Styling */
-        #financeTable { 
+        #financeTable { /* Updated ID from salaryTable */
             width: 100%;
             border-collapse: collapse;
             margin-top: 20px;
-            overflow-x: auto; 
-            display: block;
         }
 
         #financeTable th, #financeTable td {
             border: 1px solid #ddd;
             padding: 12px;
             text-align: left;
-            white-space: nowrap; 
         }
 
         #financeTable th {
             background-color: #e6f7ff; 
             color: #333;
             font-weight: bold;
-        }
-        
-        /* Action Buttons in Table */
-        .action-btn {
-            border: none;
-            padding: 5px 8px;
-            border-radius: 3px;
-            cursor: pointer;
-            font-size: 14px;
-            margin-right: 5px;
-            transition: background-color 0.3s;
-        }
-        .edit-btn {
-            background-color: #007bff; /* Blue */
-            color: white;
-        }
-        .edit-btn:hover {
-            background-color: #0056b3;
-        }
-        .delete-btn {
-            background-color: #dc3545; /* Red */
-            color: white;
-        }
-        .delete-btn:hover {
-            background-color: #c82333;
         }
 
         /* Status Highlighting */
@@ -155,7 +133,6 @@
             padding: 3px 8px;
             border-radius: 4px;
             font-weight: bold;
-            display: inline-block;
         }
 
         .status-Pending {
@@ -164,93 +141,6 @@
             padding: 3px 8px;
             border-radius: 4px;
             font-weight: bold;
-            display: inline-block;
-        }
-
-        /* Modal/Edit Form Styling */
-        .edit-modal {
-            display: none; 
-            position: fixed;
-            z-index: 10;
-            left: 0;
-            top: 0;
-            width: 100%;
-            height: 100%;
-            overflow: auto;
-            background-color: rgba(0,0,0,0.4); 
-        }
-        .modal-content {
-            background-color: #fefefe;
-            margin: 10% auto; 
-            padding: 20px;
-            border: 1px solid #888;
-            width: 80%;
-            max-width: 500px;
-            border-radius: 8px;
-            position: relative;
-        }
-        .close-btn {
-            color: #aaa;
-            float: right;
-            font-size: 28px;
-            font-weight: bold;
-        }
-        .close-btn:hover, .close-btn:focus {
-            color: black;
-            text-decoration: none;
-            cursor: pointer;
-        }
-        .modal-group {
-            margin-bottom: 15px;
-        }
-        .modal-group label {
-            display: block;
-            margin-bottom: 5px;
-            font-weight: bold;
-        }
-        .modal-group input, .modal-group select {
-            width: 100%;
-            padding: 8px;
-            box-sizing: border-box;
-            border: 1px solid #ccc;
-            border-radius: 4px;
-        }
-        .modal-save-btn {
-            background-color: #28a745;
-            color: white;
-            padding: 10px 15px;
-            border: none;
-            border-radius: 4px;
-            cursor: pointer;
-            margin-top: 10px;
-        }
-
-        /* MEDIA QUERY FOR MOBILE DEVICES */
-        @media (max-width: 768px) {
-            .container {
-                margin: 20px 10px;
-                padding: 10px;
-            }
-            .input-section {
-                grid-template-columns: 1fr; 
-                gap: 10px;
-            }
-            .input-section button.add-btn {
-                 grid-column: 1 / 1; 
-            }
-            #financeTable th, #financeTable td {
-                padding: 8px;
-                font-size: 0.8em;
-            }
-            .modal-content {
-                margin: 20% 5%;
-                width: 90%;
-            }
-            .action-btn {
-                font-size: 12px;
-                padding: 3px 6px;
-                margin-right: 2px;
-            }
         }
     </style>
 </head>
@@ -302,7 +192,7 @@
                 <input type="text" id="paymentMethod" placeholder="e.g., PayPal, Bank Transfer">
             </div>
 
-            <button class="add-btn" onclick="addEntry()">Add Transaction</button>
+            <button onclick="addEntry()">Add Transaction</button>
         </div>
         
         <hr>
@@ -326,7 +216,6 @@
                     <th>Due Date</th>
                     <th>Status</th>
                     <th>Method</th>
-                    <th>Actions</th> 
                 </tr>
             </thead>
             <tbody>
@@ -334,117 +223,45 @@
         </table>
     </div>
 
-    <div id="editModal" class="edit-modal">
-        <div class="modal-content">
-            <span class="close-btn" onclick="closeModal()">&times;</span>
-            <h3>Edit Transaction</h3>
-            
-            <input type="hidden" id="edit-id"> 
-
-            <div class="modal-group">
-                <label for="edit-transactionName">Name/Description:</label>
-                <input type="text" id="edit-transactionName">
-            </div>
-            <div class="modal-group">
-                <label for="edit-amount">Amount:</label>
-                <input type="number" id="edit-amount" min="0">
-            </div>
-            <div class="modal-group">
-                <label for="edit-currency">Currency:</label>
-                <select id="edit-currency">
-                    <option value="USD">$ (USD)</option>
-                    <option value="EUR">€ (EUR)</option>
-                    <option value="INR">₹ (INR)</option>
-                </select>
-            </div>
-            <div class="modal-group">
-                <label for="edit-dueDate">Due Date:</label>
-                <input type="date" id="edit-dueDate">
-            </div>
-            <div class="modal-group">
-                <label for="edit-paymentStatus">Payment Status:</label>
-                <select id="edit-paymentStatus">
-                    <option value="Pending">Pending</option>
-                    <option value="Paid">Paid</option>
-                </select>
-            </div>
-            <div class="modal-group">
-                <label for="edit-paymentMethod">Payment Method:</label>
-                <input type="text" id="edit-paymentMethod">
-            </div>
-
-            <button class="modal-save-btn" onclick="saveEdit()">Save Changes</button>
-        </div>
-    </div>
-
-
     <script>
-        // Key for local storage
-        const STORAGE_KEY = 'beasovaFinanceDataV3';
+        // Array to hold the transaction data
         let transactionData = [];
 
-        // --- CORE UTILITIES ---
-        function generateId() {
-            return Date.now().toString(36) + Math.random().toString(36).substring(2, 9);
-        }
-
+        // Helper function to get the currency symbol
         function getCurrencySymbol(code) {
-            const symbols = { 'USD': '$', 'EUR': '€', 'INR': '₹' };
+            const symbols = {
+                'USD': '$',
+                'EUR': '€',
+                'INR': '₹'
+            };
             return symbols[code] || '';
         }
 
-        // --- LOCAL STORAGE FUNCTIONS ---
-
-        function saveData() {
-            try {
-                // Ensure data is not null/undefined before saving
-                if (transactionData) {
-                    localStorage.setItem(STORAGE_KEY, JSON.stringify(transactionData));
-                }
-            } catch (e) {
-                console.error("Error saving data to local storage:", e);
-            }
-        }
-
-        function loadData() {
-            try {
-                const storedData = localStorage.getItem(STORAGE_KEY);
-                if (storedData) {
-                    // Check if storedData is a valid JSON string before parsing
-                    const parsedData = JSON.parse(storedData);
-                    if (Array.isArray(parsedData)) {
-                        transactionData = parsedData;
-                    } else {
-                        // Clear corrupt data if parsing fails
-                        transactionData = [];
-                        console.warn("Corrupt local data cleared.");
-                    }
-                }
-            } catch (e) {
-                console.error("Error loading/parsing data from local storage:", e);
-                transactionData = []; 
-            }
-            renderTable();
-            updateSummary();
-        }
-        
-        // --- CRUD ACTIONS ---
-
+        // Function to add a new transaction entry
         function addEntry() {
-            const name = document.getElementById('transactionName').value.trim();
-            const amount = parseFloat(document.getElementById('amount').value); 
-            const currency = document.getElementById('currency').value;
-            const dueDate = document.getElementById('dueDate').value;
-            const status = document.getElementById('paymentStatus').value;
-            const method = document.getElementById('paymentMethod').value.trim();
+            // 1. Get values from the input fields
+            const nameInput = document.getElementById('transactionName');
+            const amountInput = document.getElementById('amount');
+            const currencySelect = document.getElementById('currency');
+            const dueDateInput = document.getElementById('dueDate');
+            const statusSelect = document.getElementById('paymentStatus');
+            const methodInput = document.getElementById('paymentMethod');
 
+            const name = nameInput.value.trim();
+            const amount = parseFloat(amountInput.value); 
+            const currency = currencySelect.value;
+            const dueDate = dueDateInput.value;
+            const status = statusSelect.value;
+            const method = methodInput.value.trim();
+
+            // Basic validation
             if (name === "" || isNaN(amount) || amount <= 0) {
-                alert("Please enter a valid name/description and a positive amount.");
+                alert("Please enter a valid name/description and an amount greater than 0.");
                 return;
             }
 
+            // 2. Create the new entry object
             const newEntry = {
-                id: generateId(), 
                 name: name,
                 amount: amount,
                 currency: currency,
@@ -453,146 +270,72 @@
                 method: method
             };
 
+            // 3. Add to the data array
             transactionData.push(newEntry);
-            saveData(); 
+
+            // 4. Update the display
             renderTable();
             updateSummary();
 
-            // Clear form fields
-            document.getElementById('transactionName').value = '';
-            document.getElementById('amount').value = '';
-            document.getElementById('dueDate').value = '';
-            document.getElementById('paymentStatus').value = 'Pending'; 
-            document.getElementById('paymentMethod').value = '';
+            // 5. Clear the form fields (optional: keep method for quick re-entry)
+            nameInput.value = '';
+            amountInput.value = '';
+            // currencySelect.value = 'USD'; // Keep current currency selection
+            dueDateInput.value = '';
+            statusSelect.value = 'Pending'; 
+            // methodInput.value = ''; // Optional: clear method
         }
 
-        function deleteEntry(itemId) {
-            if (!confirm("Are you sure you want to delete this transaction? This action cannot be undone.")) {
-                return;
-            }
-
-            transactionData = transactionData.filter(entry => entry.id !== itemId); 
-
-            saveData(); 
-            renderTable();
-            updateSummary();
-        }
-
-        // --- EDITING/MODAL FUNCTIONS ---
-
-        function openModal(itemId) {
-            const entry = transactionData.find(e => e.id === itemId);
-            if (!entry) {
-                console.error("Entry not found for editing:", itemId);
-                return;
-            }
-
-            document.getElementById('edit-id').value = entry.id;
-            document.getElementById('edit-transactionName').value = entry.name;
-            document.getElementById('edit-amount').value = entry.amount;
-            document.getElementById('edit-currency').value = entry.currency;
-            document.getElementById('edit-dueDate').value = entry.dueDate;
-            document.getElementById('edit-paymentStatus').value = entry.status;
-            document.getElementById('edit-paymentMethod').value = entry.method;
-
-            document.getElementById('editModal').style.display = 'block';
-        }
-
-        function closeModal() {
-            document.getElementById('editModal').style.display = 'none';
-        }
-
-        function saveEdit() {
-            const itemId = document.getElementById('edit-id').value;
-            const updatedName = document.getElementById('edit-transactionName').value.trim();
-            const updatedAmount = parseFloat(document.getElementById('edit-amount').value);
-            const updatedCurrency = document.getElementById('edit-currency').value;
-            const updatedDueDate = document.getElementById('edit-dueDate').value;
-            const updatedStatus = document.getElementById('edit-paymentStatus').value;
-            const updatedMethod = document.getElementById('edit-paymentMethod').value.trim();
-            
-            if (updatedName === "" || isNaN(updatedAmount) || updatedAmount <= 0) {
-                alert("Please enter a valid name/description and a positive amount.");
-                return;
-            }
-
-            const entry = transactionData.find(e => e.id === itemId);
-            
-            if (entry) {
-                entry.name = updatedName;
-                entry.amount = updatedAmount;
-                entry.currency = updatedCurrency;
-                entry.dueDate = updatedDueDate;
-                entry.status = updatedStatus;
-                entry.method = updatedMethod;
-
-                saveData();
-                renderTable();
-                updateSummary();
-                closeModal();
-            } else {
-                console.error("Error: Transaction not found by ID during saveEdit.");
-                alert("Error: Transaction not found.");
-            }
-        }
-
-        window.onclick = function(event) {
-            const modal = document.getElementById('editModal');
-            if (event.target === modal) {
-                closeModal();
-            }
-        }
-
-        // --- DISPLAY FUNCTIONS ---
-
+        // Function to re-render the entire table based on transactionData array
         function renderTable() {
             const tableBody = document.getElementById('financeTable').getElementsByTagName('tbody')[0];
-            
-            if (!tableBody) {
-                console.error("Table body (tbody) element not found! Check HTML structure.");
-                return;
-            }
-            tableBody.innerHTML = ''; 
+            // Clear existing rows
+            tableBody.innerHTML = '';
 
-            transactionData.forEach(entry => { 
+            // Loop through the data array and create table rows
+            transactionData.forEach(entry => {
                 const newRow = tableBody.insertRow();
                 
+                // Name cell
                 newRow.insertCell().textContent = entry.name;
 
+                // Amount cell (formatted with currency)
                 const amountCell = newRow.insertCell();
                 const symbol = getCurrencySymbol(entry.currency);
                 amountCell.textContent = symbol + entry.amount.toFixed(2) + ' (' + entry.currency + ')';
 
-                newRow.insertCell().textContent = entry.dueDate || 'N/A';
+                // Due Date cell
+                newRow.insertCell().textContent = entry.dueDate || 'N/A'; // Show N/A if date is empty
 
+                // Status cell
                 const statusCell = newRow.insertCell();
-                const statusSpan = document.createElement('span'); 
-                statusSpan.textContent = entry.status;
-                statusSpan.classList.add('status-' + entry.status);
-                statusCell.appendChild(statusSpan);
+                statusCell.textContent = entry.status;
+                statusCell.classList.add('status-' + entry.status);
 
+                // Method cell
                 newRow.insertCell().textContent = entry.method || 'N/A';
-                
-                const actionCell = newRow.insertCell();
-                
-                const editButton = document.createElement('button');
-                editButton.textContent = 'Edit';
-                editButton.classList.add('action-btn', 'edit-btn');
-                editButton.onclick = () => openModal(entry.id); 
-                actionCell.appendChild(editButton);
-
-                const deleteButton = document.createElement('button');
-                deleteButton.textContent = 'Delete';
-                deleteButton.classList.add('action-btn', 'delete-btn');
-                deleteButton.onclick = () => deleteEntry(entry.id); 
-                actionCell.appendChild(deleteButton);
             });
         }
 
+        // Function to calculate and update the summary section (Counts only)
         function updateSummary() {
             let countPaid = 0;
             let countPending = 0;
             
-            if (transactionData.length === 0) {
-                 document.getElementById('totalTransactions').textContent = 0;
-                 document.getElementById('countP
+            // Calculate totals
+            transactionData.forEach(entry => {
+                if (entry.status === 'Paid') {
+                    countPaid++;
+                } else if (entry.status === 'Pending') {
+                    countPending++;
+                }
+            });
+
+            // Update the DOM elements
+            document.getElementById('totalTransactions').textContent = transactionData.length;
+            document.getElementById('countPaid').textContent = countPaid;
+            document.getElementById('countPending').textContent = countPending;
+        }
+    </script>
+</body>
+</html>
