@@ -385,7 +385,6 @@
 
         // --- CORE UTILITIES ---
         function generateId() {
-            // Generates a unique, short ID
             return Date.now().toString(36) + Math.random().toString(36).substring(2, 9);
         }
 
@@ -398,10 +397,12 @@
 
         function saveData() {
             try {
-                localStorage.setItem(STORAGE_KEY, JSON.stringify(transactionData));
+                // Ensure data is not null/undefined before saving
+                if (transactionData) {
+                    localStorage.setItem(STORAGE_KEY, JSON.stringify(transactionData));
+                }
             } catch (e) {
                 console.error("Error saving data to local storage:", e);
-                // Alert only if necessary, logging is often enough
             }
         }
 
@@ -409,10 +410,18 @@
             try {
                 const storedData = localStorage.getItem(STORAGE_KEY);
                 if (storedData) {
-                    transactionData = JSON.parse(storedData);
+                    // Check if storedData is a valid JSON string before parsing
+                    const parsedData = JSON.parse(storedData);
+                    if (Array.isArray(parsedData)) {
+                        transactionData = parsedData;
+                    } else {
+                        // Clear corrupt data if parsing fails
+                        transactionData = [];
+                        console.warn("Corrupt local data cleared.");
+                    }
                 }
             } catch (e) {
-                console.error("Error loading data from local storage:", e);
+                console.error("Error loading/parsing data from local storage:", e);
                 transactionData = []; 
             }
             renderTable();
@@ -462,7 +471,6 @@
                 return;
             }
 
-            // Filter creates a new array without the item matching the ID
             transactionData = transactionData.filter(entry => entry.id !== itemId); 
 
             saveData(); 
@@ -479,7 +487,6 @@
                 return;
             }
 
-            // Populate the modal form with the current entry data
             document.getElementById('edit-id').value = entry.id;
             document.getElementById('edit-transactionName').value = entry.name;
             document.getElementById('edit-amount').value = entry.amount;
@@ -488,7 +495,6 @@
             document.getElementById('edit-paymentStatus').value = entry.status;
             document.getElementById('edit-paymentMethod').value = entry.method;
 
-            // Display the modal
             document.getElementById('editModal').style.display = 'block';
         }
 
@@ -510,11 +516,9 @@
                 return;
             }
 
-            // Find the item directly by ID
             const entry = transactionData.find(e => e.id === itemId);
             
             if (entry) {
-                // Update the item properties
                 entry.name = updatedName;
                 entry.amount = updatedAmount;
                 entry.currency = updatedCurrency;
@@ -532,7 +536,6 @@
             }
         }
 
-        // Close the modal if the user clicks anywhere outside of it
         window.onclick = function(event) {
             const modal = document.getElementById('editModal');
             if (event.target === modal) {
@@ -554,38 +557,30 @@
             transactionData.forEach(entry => { 
                 const newRow = tableBody.insertRow();
                 
-                // 1. Name cell
                 newRow.insertCell().textContent = entry.name;
 
-                // 2. Amount cell (formatted with currency)
                 const amountCell = newRow.insertCell();
                 const symbol = getCurrencySymbol(entry.currency);
                 amountCell.textContent = symbol + entry.amount.toFixed(2) + ' (' + entry.currency + ')';
 
-                // 3. Due Date cell
                 newRow.insertCell().textContent = entry.dueDate || 'N/A';
 
-                // 4. Status cell
                 const statusCell = newRow.insertCell();
                 const statusSpan = document.createElement('span'); 
                 statusSpan.textContent = entry.status;
                 statusSpan.classList.add('status-' + entry.status);
                 statusCell.appendChild(statusSpan);
 
-                // 5. Method cell
                 newRow.insertCell().textContent = entry.method || 'N/A';
                 
-                // 6. Action cell (Edit and Delete Buttons)
                 const actionCell = newRow.insertCell();
                 
-                // Edit Button
                 const editButton = document.createElement('button');
                 editButton.textContent = 'Edit';
                 editButton.classList.add('action-btn', 'edit-btn');
                 editButton.onclick = () => openModal(entry.id); 
                 actionCell.appendChild(editButton);
 
-                // Delete Button
                 const deleteButton = document.createElement('button');
                 deleteButton.textContent = 'Delete';
                 deleteButton.classList.add('action-btn', 'delete-btn');
@@ -596,4 +591,8 @@
 
         function updateSummary() {
             let countPaid = 0;
-          
+            let countPending = 0;
+            
+            if (transactionData.length === 0) {
+                 document.getElementById('totalTransactions').textContent = 0;
+                 document.getElementById('countP
