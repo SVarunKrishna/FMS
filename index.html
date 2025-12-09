@@ -1,0 +1,599 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Beasova Group - Full Finance Tracker</title>
+    
+    <style>
+        /* BASE STYLES */
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f9;
+            color: #333;
+            margin: 0;
+            padding: 0;
+        }
+
+        .container {
+            max-width: 1200px; 
+            margin: 50px auto;
+            padding: 20px;
+            background-color: #fff;
+            box-shadow: 0 0 15px rgba(0, 0, 0, 0.15);
+            border-radius: 8px;
+        }
+
+        /* Header Styling */
+        .org-header {
+            text-align: center;
+            margin-bottom: 25px;
+            padding-bottom: 10px;
+            border-bottom: 3px solid #004d99;
+        }
+
+        .org-header h1 {
+            color: #004d99; 
+            margin: 5px 0;
+            font-size: 1.8em;
+        }
+
+        .org-header h2 {
+            color: #666;
+            margin: 0;
+            font-size: 1.2em;
+            font-weight: normal;
+        }
+
+        .logo-placeholder {
+            font-size: 24px;
+            font-weight: bold;
+            color: white;
+            background-color: #007bff;
+            padding: 5px 15px;
+            display: inline-block;
+            border-radius: 4px;
+            margin-bottom: 10px;
+        }
+
+        /* Input Form Layout */
+        .input-section {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr); 
+            gap: 20px;
+            margin-bottom: 20px;
+            padding: 15px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+        }
+
+        .input-group {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .input-section label {
+            margin-bottom: 5px;
+            font-weight: bold;
+        }
+
+        .input-section input, .input-section select {
+            padding: 10px;
+            box-sizing: border-box; 
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            flex-grow: 1;
+        }
+
+        .input-section button.add-btn {
+            grid-column: 1 / -1; 
+            background-color: #28a745;
+            color: white;
+            border: none;
+            cursor: pointer;
+            font-size: 18px;
+            padding: 12px;
+            border-radius: 4px;
+            transition: background-color 0.3s;
+        }
+
+        .input-section button.add-btn:hover {
+            background-color: #1e7e34;
+        }
+
+        /* Table Styling */
+        #financeTable { 
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+            overflow-x: auto; 
+            display: block;
+        }
+
+        #financeTable th, #financeTable td {
+            border: 1px solid #ddd;
+            padding: 12px;
+            text-align: left;
+            white-space: nowrap; 
+        }
+
+        #financeTable th {
+            background-color: #e6f7ff; 
+            color: #333;
+            font-weight: bold;
+        }
+        
+        /* Action Buttons in Table */
+        .action-btn {
+            border: none;
+            padding: 5px 8px;
+            border-radius: 3px;
+            cursor: pointer;
+            font-size: 14px;
+            margin-right: 5px;
+            transition: background-color 0.3s;
+        }
+        .edit-btn {
+            background-color: #007bff; /* Blue */
+            color: white;
+        }
+        .edit-btn:hover {
+            background-color: #0056b3;
+        }
+        .delete-btn {
+            background-color: #dc3545; /* Red */
+            color: white;
+        }
+        .delete-btn:hover {
+            background-color: #c82333;
+        }
+
+        /* Status Highlighting */
+        .status-Paid {
+            color: #155724; 
+            background-color: #d4edda; 
+            padding: 3px 8px;
+            border-radius: 4px;
+            font-weight: bold;
+            display: inline-block;
+        }
+
+        .status-Pending {
+            color: #721c24; 
+            background-color: #f8d7da; 
+            padding: 3px 8px;
+            border-radius: 4px;
+            font-weight: bold;
+            display: inline-block;
+        }
+
+        /* Modal/Edit Form Styling */
+        .edit-modal {
+            display: none; 
+            position: fixed;
+            z-index: 10;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            overflow: auto;
+            background-color: rgba(0,0,0,0.4); 
+        }
+        .modal-content {
+            background-color: #fefefe;
+            margin: 10% auto; 
+            padding: 20px;
+            border: 1px solid #888;
+            width: 80%;
+            max-width: 500px;
+            border-radius: 8px;
+            position: relative;
+        }
+        .close-btn {
+            color: #aaa;
+            float: right;
+            font-size: 28px;
+            font-weight: bold;
+        }
+        .close-btn:hover, .close-btn:focus {
+            color: black;
+            text-decoration: none;
+            cursor: pointer;
+        }
+        .modal-group {
+            margin-bottom: 15px;
+        }
+        .modal-group label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: bold;
+        }
+        .modal-group input, .modal-group select {
+            width: 100%;
+            padding: 8px;
+            box-sizing: border-box;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+        }
+        .modal-save-btn {
+            background-color: #28a745;
+            color: white;
+            padding: 10px 15px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            margin-top: 10px;
+        }
+
+        /* MEDIA QUERY FOR MOBILE DEVICES */
+        @media (max-width: 768px) {
+            .container {
+                margin: 20px 10px;
+                padding: 10px;
+            }
+            .input-section {
+                grid-template-columns: 1fr; 
+                gap: 10px;
+            }
+            .input-section button.add-btn {
+                 grid-column: 1 / 1; 
+            }
+            #financeTable th, #financeTable td {
+                padding: 8px;
+                font-size: 0.8em;
+            }
+            .modal-content {
+                margin: 20% 5%;
+                width: 90%;
+            }
+            .action-btn {
+                font-size: 12px;
+                padding: 3px 6px;
+                margin-right: 2px;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        
+        <header class="org-header">
+            <div class="logo-placeholder">BEASOVA</div> 
+            <h1>Beasova Group of Companies</h1>
+            <h2>Finance Transaction Tracker (Salaries & Payments)</h2>
+        </header>
+
+        <div class="input-section">
+            <div class="input-group">
+                <label for="transactionName">Name/Description:</label>
+                <input type="text" id="transactionName" placeholder="e.g., Gerardo Carrino (CostMusic)" required>
+            </div>
+
+            <div class="input-group">
+                <label for="amount">Amount:</label>
+                <input type="number" id="amount" min="0" placeholder="e.g., 327" required>
+            </div>
+            
+            <div class="input-group">
+                <label for="currency">Currency:</label>
+                <select id="currency">
+                    <option value="USD">$ (USD)</option>
+                    <option value="EUR">€ (EUR)</option>
+                    <option value="INR">₹ (INR)</option>
+                </select>
+            </div>
+
+            <div class="input-group">
+                <label for="dueDate">Due Date:</label>
+                <input type="date" id="dueDate">
+            </div>
+
+            <div class="input-group">
+                <label for="paymentStatus">Payment Status:</label>
+                <select id="paymentStatus">
+                    <option value="Pending">Pending</option>
+                    <option value="Paid">Paid</option>
+                </select>
+            </div>
+
+            <div class="input-group">
+                <label for="paymentMethod">Payment Method (Optional):</label>
+                <input type="text" id="paymentMethod" placeholder="e.g., PayPal, Bank Transfer">
+            </div>
+
+            <button class="add-btn" onclick="addEntry()">Add Transaction</button>
+        </div>
+        
+        <hr>
+
+        <div class="summary-section">
+            <h3>Transaction Summary (Count Only)</h3>
+            <p>Total Transactions Tracked: <span id="totalTransactions">0</span></p>
+            <p style="color: green;">Total Paid Transactions: <span id="countPaid">0</span></p>
+            <p style="color: red;">Total Pending Transactions: <span id="countPending">0</span></p>
+            <small>Note: Amount totals are disabled due to mixed currencies.</small>
+        </div>
+
+        <hr>
+
+        <h2>Transaction Details</h2>
+        <table id="financeTable">
+            <thead>
+                <tr>
+                    <th>Name/Description</th>
+                    <th>Amount</th>
+                    <th>Due Date</th>
+                    <th>Status</th>
+                    <th>Method</th>
+                    <th>Actions</th> 
+                </tr>
+            </thead>
+            <tbody>
+                </tbody>
+        </table>
+    </div>
+
+    <div id="editModal" class="edit-modal">
+        <div class="modal-content">
+            <span class="close-btn" onclick="closeModal()">&times;</span>
+            <h3>Edit Transaction</h3>
+            
+            <input type="hidden" id="edit-id"> 
+
+            <div class="modal-group">
+                <label for="edit-transactionName">Name/Description:</label>
+                <input type="text" id="edit-transactionName">
+            </div>
+            <div class="modal-group">
+                <label for="edit-amount">Amount:</label>
+                <input type="number" id="edit-amount" min="0">
+            </div>
+            <div class="modal-group">
+                <label for="edit-currency">Currency:</label>
+                <select id="edit-currency">
+                    <option value="USD">$ (USD)</option>
+                    <option value="EUR">€ (EUR)</option>
+                    <option value="INR">₹ (INR)</option>
+                </select>
+            </div>
+            <div class="modal-group">
+                <label for="edit-dueDate">Due Date:</label>
+                <input type="date" id="edit-dueDate">
+            </div>
+            <div class="modal-group">
+                <label for="edit-paymentStatus">Payment Status:</label>
+                <select id="edit-paymentStatus">
+                    <option value="Pending">Pending</option>
+                    <option value="Paid">Paid</option>
+                </select>
+            </div>
+            <div class="modal-group">
+                <label for="edit-paymentMethod">Payment Method:</label>
+                <input type="text" id="edit-paymentMethod">
+            </div>
+
+            <button class="modal-save-btn" onclick="saveEdit()">Save Changes</button>
+        </div>
+    </div>
+
+
+    <script>
+        // Key for local storage
+        const STORAGE_KEY = 'beasovaFinanceDataV3';
+        let transactionData = [];
+
+        // --- CORE UTILITIES ---
+        function generateId() {
+            // Generates a unique, short ID
+            return Date.now().toString(36) + Math.random().toString(36).substring(2, 9);
+        }
+
+        function getCurrencySymbol(code) {
+            const symbols = { 'USD': '$', 'EUR': '€', 'INR': '₹' };
+            return symbols[code] || '';
+        }
+
+        // --- LOCAL STORAGE FUNCTIONS ---
+
+        function saveData() {
+            try {
+                localStorage.setItem(STORAGE_KEY, JSON.stringify(transactionData));
+            } catch (e) {
+                console.error("Error saving data to local storage:", e);
+                // Alert only if necessary, logging is often enough
+            }
+        }
+
+        function loadData() {
+            try {
+                const storedData = localStorage.getItem(STORAGE_KEY);
+                if (storedData) {
+                    transactionData = JSON.parse(storedData);
+                }
+            } catch (e) {
+                console.error("Error loading data from local storage:", e);
+                transactionData = []; 
+            }
+            renderTable();
+            updateSummary();
+        }
+        
+        // --- CRUD ACTIONS ---
+
+        function addEntry() {
+            const name = document.getElementById('transactionName').value.trim();
+            const amount = parseFloat(document.getElementById('amount').value); 
+            const currency = document.getElementById('currency').value;
+            const dueDate = document.getElementById('dueDate').value;
+            const status = document.getElementById('paymentStatus').value;
+            const method = document.getElementById('paymentMethod').value.trim();
+
+            if (name === "" || isNaN(amount) || amount <= 0) {
+                alert("Please enter a valid name/description and a positive amount.");
+                return;
+            }
+
+            const newEntry = {
+                id: generateId(), 
+                name: name,
+                amount: amount,
+                currency: currency,
+                dueDate: dueDate,
+                status: status,
+                method: method
+            };
+
+            transactionData.push(newEntry);
+            saveData(); 
+            renderTable();
+            updateSummary();
+
+            // Clear form fields
+            document.getElementById('transactionName').value = '';
+            document.getElementById('amount').value = '';
+            document.getElementById('dueDate').value = '';
+            document.getElementById('paymentStatus').value = 'Pending'; 
+            document.getElementById('paymentMethod').value = '';
+        }
+
+        function deleteEntry(itemId) {
+            if (!confirm("Are you sure you want to delete this transaction? This action cannot be undone.")) {
+                return;
+            }
+
+            // Filter creates a new array without the item matching the ID
+            transactionData = transactionData.filter(entry => entry.id !== itemId); 
+
+            saveData(); 
+            renderTable();
+            updateSummary();
+        }
+
+        // --- EDITING/MODAL FUNCTIONS ---
+
+        function openModal(itemId) {
+            const entry = transactionData.find(e => e.id === itemId);
+            if (!entry) {
+                console.error("Entry not found for editing:", itemId);
+                return;
+            }
+
+            // Populate the modal form with the current entry data
+            document.getElementById('edit-id').value = entry.id;
+            document.getElementById('edit-transactionName').value = entry.name;
+            document.getElementById('edit-amount').value = entry.amount;
+            document.getElementById('edit-currency').value = entry.currency;
+            document.getElementById('edit-dueDate').value = entry.dueDate;
+            document.getElementById('edit-paymentStatus').value = entry.status;
+            document.getElementById('edit-paymentMethod').value = entry.method;
+
+            // Display the modal
+            document.getElementById('editModal').style.display = 'block';
+        }
+
+        function closeModal() {
+            document.getElementById('editModal').style.display = 'none';
+        }
+
+        function saveEdit() {
+            const itemId = document.getElementById('edit-id').value;
+            const updatedName = document.getElementById('edit-transactionName').value.trim();
+            const updatedAmount = parseFloat(document.getElementById('edit-amount').value);
+            const updatedCurrency = document.getElementById('edit-currency').value;
+            const updatedDueDate = document.getElementById('edit-dueDate').value;
+            const updatedStatus = document.getElementById('edit-paymentStatus').value;
+            const updatedMethod = document.getElementById('edit-paymentMethod').value.trim();
+            
+            if (updatedName === "" || isNaN(updatedAmount) || updatedAmount <= 0) {
+                alert("Please enter a valid name/description and a positive amount.");
+                return;
+            }
+
+            // Find the item directly by ID
+            const entry = transactionData.find(e => e.id === itemId);
+            
+            if (entry) {
+                // Update the item properties
+                entry.name = updatedName;
+                entry.amount = updatedAmount;
+                entry.currency = updatedCurrency;
+                entry.dueDate = updatedDueDate;
+                entry.status = updatedStatus;
+                entry.method = updatedMethod;
+
+                saveData();
+                renderTable();
+                updateSummary();
+                closeModal();
+            } else {
+                console.error("Error: Transaction not found by ID during saveEdit.");
+                alert("Error: Transaction not found.");
+            }
+        }
+
+        // Close the modal if the user clicks anywhere outside of it
+        window.onclick = function(event) {
+            const modal = document.getElementById('editModal');
+            if (event.target === modal) {
+                closeModal();
+            }
+        }
+
+        // --- DISPLAY FUNCTIONS ---
+
+        function renderTable() {
+            const tableBody = document.getElementById('financeTable').getElementsByTagName('tbody')[0];
+            
+            if (!tableBody) {
+                console.error("Table body (tbody) element not found! Check HTML structure.");
+                return;
+            }
+            tableBody.innerHTML = ''; 
+
+            transactionData.forEach(entry => { 
+                const newRow = tableBody.insertRow();
+                
+                // 1. Name cell
+                newRow.insertCell().textContent = entry.name;
+
+                // 2. Amount cell (formatted with currency)
+                const amountCell = newRow.insertCell();
+                const symbol = getCurrencySymbol(entry.currency);
+                amountCell.textContent = symbol + entry.amount.toFixed(2) + ' (' + entry.currency + ')';
+
+                // 3. Due Date cell
+                newRow.insertCell().textContent = entry.dueDate || 'N/A';
+
+                // 4. Status cell
+                const statusCell = newRow.insertCell();
+                const statusSpan = document.createElement('span'); 
+                statusSpan.textContent = entry.status;
+                statusSpan.classList.add('status-' + entry.status);
+                statusCell.appendChild(statusSpan);
+
+                // 5. Method cell
+                newRow.insertCell().textContent = entry.method || 'N/A';
+                
+                // 6. Action cell (Edit and Delete Buttons)
+                const actionCell = newRow.insertCell();
+                
+                // Edit Button
+                const editButton = document.createElement('button');
+                editButton.textContent = 'Edit';
+                editButton.classList.add('action-btn', 'edit-btn');
+                editButton.onclick = () => openModal(entry.id); 
+                actionCell.appendChild(editButton);
+
+                // Delete Button
+                const deleteButton = document.createElement('button');
+                deleteButton.textContent = 'Delete';
+                deleteButton.classList.add('action-btn', 'delete-btn');
+                deleteButton.onclick = () => deleteEntry(entry.id); 
+                actionCell.appendChild(deleteButton);
+            });
+        }
+
+        function updateSummary() {
+            let countPaid = 0;
+          
